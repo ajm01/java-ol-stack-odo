@@ -1,0 +1,68 @@
+metadata:
+  name: openLibertyuoqcd
+projects:
+  - name: myapp
+    source:
+      location: 'https://github.com/ajm01/devFileSrcProj.git'
+      type: git
+      branch: master
+components:
+  - id: redhat/java/latest
+    memoryLimit: 1512Mi
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: 9080/tcp
+        port: 9080
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
+    memoryLimit: 768Mi
+    type: dockerimage
+#    volumes:
+#      - name: m2
+#        containerPath: /home/user/.m2
+    alias: runtime
+    image: 'ajymau/openliberty-appsody-dev:latest'
+    env:
+      - value: TEST
+        name: MODE
+      - value: myval
+        name: myprop
+  - mountSources: true
+    endpoints:
+      - name: 9090/tcp
+        port: 9090
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
+    memoryLimit: 768Mi
+    type: dockerimage
+#    volumes:
+#      - name: m2
+#        containerPath: /home/user/.m2
+    alias: build
+    image: 'ajymau/openliberty-appsody-dev:latest'
+    env:
+      - value: TEST2
+        name: MODE2
+      - value: myval2
+        name: myprop2
+apiVersion: 1.0.0
+commands:
+  - name: Builder
+    actions:
+      - workdir: /projects/myapp
+        type: exec
+        command: TEST_ENV=true /artifacts/bin/build.sh
+        component: build
+  - name: Run
+    actions:
+      - workdir: /projects/myapp
+        type: exec
+        command: /artifacts/bin/run.sh
+        component: runtime
