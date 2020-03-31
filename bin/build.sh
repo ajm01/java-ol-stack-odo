@@ -21,14 +21,11 @@ fi
 echo AJM Project contents:
 ls -la
 
-#mvn -B clean package -Dmaven.repo.local=/artifacts/.m2/repository -DskipTests=true
-echo AJM here is the local repo location:
-mvn -e help:evaluate -Dexpression=settings.localRepository
-
 echo AJM - building the pom now...
 
-#mvn -B clean package -Dmaven.repo.local=/artifacts/.m2/repository -DskipTests=true
-mvn -B -Plocal-dev -Ddebug=false -Dmaven.repo.local=/home/user/.m2/repository liberty:dev
+mvn -B clean package -Dmaven.repo.local=/home/user/.m2/repository -DskipTests=true liberty:create
+#mvn -Dmaven.repo.local=/home/user/.m2/repository pre-integration-test liberty:dev
+#mvn -Ddebug=false -Dmaven.repo.local=/home/user/.m2/repository pre-integration-test liberty:install-server
 if [ ! $? -eq 0 ]; then
     echo "The maven build failed"
     exit 1
@@ -41,7 +38,7 @@ ls -la ./target
 
 date
 echo Copying server configuration artifacts to /config
-CONFIGDIR=$(dirname $(find /projects/openLiberty/target/liberty/wlp/usr/servers -name server.xml))
+CONFIGDIR=$(dirname $(find /projects/myapp/target/liberty/wlp/usr/servers -name server.xml))
 if [ ! $? -eq 0 ]; then
     echo "Cannot start the server because the config directory could not be found"
     exit 1

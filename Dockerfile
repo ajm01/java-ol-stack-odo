@@ -129,8 +129,7 @@ USER 1001
 RUN mkdir -m 777 -p /config/resources
 
 COPY --chown=1001:0 bin/. /artifacts/bin
-# AJM COPY --chown=1001:0 openLiberty/. /projects/openLiberty
-
+#COPY --chown=1001:0 --from=compile /project/user-app/target/liberty /projects/myapp/target
 
 ENV JAVA_HOME=$HOME/java \
     PATH=$HOME/java/jre/bin:$HOME/mvn/apache-maven/bin:$PATH
