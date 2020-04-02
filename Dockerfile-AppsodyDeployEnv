@@ -1,0 +1,44 @@
+# Step 2: Package Open Liberty image
+FROM openliberty/open-liberty:19.0.0.12-kernel-java8-openj9-ubi
+#FROM open-liberty
+
+#ENV JAVA_VERSION_PREFIX 1.8.0
+#ENV HOME /home/default
+
+USER root
+
+RUN mkdir -m 777 -p /artifacts
+RUN mkdir -m 777 -p /projects
+
+USER 1001
+
+RUN mkdir -m 777 -p /config/resources
+
+COPY --chown=1001:0 bin/. /artifacts/bin
+
+#USER 1001
+
+RUN mkdir -m 777 -p /config/resources
+
+COPY --chown=1001:0 bin/. /artifacts/bin
+#COPY --chown=1001:0 --from=compile /project/user-app/target/liberty /projects/myapp/target
+
+#ENV JAVA_HOME=$HOME/java \
+#    PATH=$HOME/java/jre/bin:$HOME/mvn/apache-maven/bin:$PATH
+
+#2a) copy any resources 
+#COPY --chown=1001:0 --from=compile /shared /opt/ol/wlp/usr/shared/
+
+# 2b) next copy shared library
+#      but can't assume config/lib exists - copy from previous stage to a tmp holding place and test
+#COPY --chown=1001:0 --from=compile /configlibdir/ /config
+
+# 2c) Server config, bootstrap.properties, and everything else
+#COPY --chown=1001:0 --from=compile /config/ /config/
+
+
+# 2d) Changes to the application binary
+#COPY --chown=1001:0 --from=compile /project/user-app/target/*.[ew]ar /config/apps
+
+
+RUN configure.sh
