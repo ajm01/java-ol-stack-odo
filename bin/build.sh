@@ -21,6 +21,15 @@ fi
 echo AJM Project contents:
 ls -la
 
+echo AJM data contents:
+find /stack -name "*"
+
+echo AJM - validating the project
+cp /stack/validate.sh /projects/user-app
+cd /projects/user-app
+./validate.sh build
+
+
 echo AJM - building the pom now...
 
 mvn -B liberty:install-server
@@ -48,7 +57,7 @@ echo Copying server configuration artifacts to /config
 
 rm -rf /data/config/*
 
-CONFIGDIR=$(dirname $(find /projects/myapp/target/liberty/wlp/usr/servers -name server.xml))
+CONFIGDIR=$(dirname $(find /projects/user-app/target/liberty/wlp/usr/servers -name server.xml))
 if [ ! $? -eq 0 ]; then
     echo "Cannot start the server because the config directory could not be found"
     exit 1

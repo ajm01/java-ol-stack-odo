@@ -10,7 +10,7 @@ if [ ! -f pom.xml ]; then
     exit 1
 fi
 
-CONFIGDIR=$(dirname $(find /projects/myapp/target/liberty/wlp/usr/servers -name server.xml))
+CONFIGDIR=$(dirname $(find /opt/ol/wlp/usr/servers -name server.xml))
 if [ ! $? -eq 0 ]; then
     echo "Cannot start the server because the config directory could not be found"
     exit 1

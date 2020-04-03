@@ -30,16 +30,20 @@ if [ "$1" == "dev" ]; then
 fi
 
 # Get parent pom information
-a_groupId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:groupId" /project/pom.xml)
-a_artifactId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:artifactId" /project/pom.xml)
-a_version=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:version" /project/pom.xml)
-p_groupId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:parent/x:groupId" pom.xml)
-p_artifactId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:parent/x:artifactId" pom.xml)
-p_version_range=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:parent/x:version" pom.xml)
+
+a_groupId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:groupId" /stack/pom.xml)
+a_artifactId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:artifactId" /stack/pom.xml)
+a_version=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:version" /stack/pom.xml)
+p_groupId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:parent/x:groupId" /projects/user-app/pom.xml)
+p_artifactId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:parent/x:artifactId" /projects/user-app/pom.xml)
+p_version_range=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:parent/x:version" /projects/user-app/pom.xml)
+
+echo userapp pom: $a_groupId $a_artifactId $a_version 
+echo parent pom $p_groupId $p_artifactId $p_version_range
 
 # Install parent pom
 echo "Installing parent ${a_groupId}:${a_artifactId}:${a_version}"
-mvn install $M2_LOCAL_REPO -Denforcer.skip=true -f ../pom.xml
+mvn install $M2_LOCAL_REPO -Denforcer.skip=true -f /stack/pom.xml
 
 
 
@@ -57,7 +61,7 @@ if [ "${p_groupId}" != "${a_groupId}" ] || [ "${p_artifactId}" != "${a_artifactI
 fi
 
 # Check parent version
-if ! /project/util/check_version contains "$p_version_range" "$a_version";  then
+if ! /stack/util/check_version contains "$p_version_range" "$a_version";  then
   echo "STACK VALIDATION ERROR: Version mismatch
 
 The version of the appsody stack '${a_version}' does not match the
@@ -72,10 +76,10 @@ fi
 # Check that the child pom has not overridden the Open Liberty version
 
 # This is far from the only way from configuring an Open Liberty installation.  The idea is to stop a naive copy/paste/tweak user, not to stop a user determined to override and willing to read the doc.
-child_ol_version_property=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:properties/x:version.openliberty-runtime" pom.xml)
-child_ol_groupId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:build/x:plugins/x:plugin[x:artifactId='liberty-maven-plugin']/x:configuration/x:runtimeArtifact/x:groupId" pom.xml)
-child_ol_artifactId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:build/x:plugins/x:plugin[x:artifactId='liberty-maven-plugin']/x:configuration/x:runtimeArtifact/x:artifactId" pom.xml)
-child_ol_version=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:build/x:plugins/x:plugin[x:artifactId='liberty-maven-plugin']/x:configuration/x:runtimeArtifact/x:version" pom.xml)
+child_ol_version_property=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:properties/x:version.openliberty-runtime" /projects/user-app/pom.xml)
+child_ol_groupId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:build/x:plugins/x:plugin[x:artifactId='liberty-maven-plugin']/x:configuration/x:runtimeArtifact/x:groupId" /projects/user-app/pom.xml)
+child_ol_artifactId=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:build/x:plugins/x:plugin[x:artifactId='liberty-maven-plugin']/x:configuration/x:runtimeArtifact/x:artifactId" /projects/user-app/pom.xml)
+child_ol_version=$(xmlstarlet sel -T -N x="http://maven.apache.org/POM/4.0.0" -t -v "/x:project/x:build/x:plugins/x:plugin[x:artifactId='liberty-maven-plugin']/x:configuration/x:runtimeArtifact/x:version" /projects/user-app/pom.xml)
 
 if ! [[
         ( "${child_ol_groupId}" == "")
