@@ -65,6 +65,7 @@ fi
 
 echo AJM: configdir = $CONFIGDIR
 
+mkdir -p /data/config/apps
 mkdir -p /data/config/resources
 chown -R java_user:java_group /data/config
 # make a well known place for shared library jars seperate from the rest of the defaultServer contents (to help with caching)

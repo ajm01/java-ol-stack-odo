@@ -16,10 +16,10 @@ if [ ! $? -eq 0 ]; then
     exit 1
 fi
 
-cp -rf /data/shared/* /opt/ol/wlp/usr/shared/
-cp -rf /data/configlibdir/* /config
-cp -rf /data/config/* /config/
-cp -rf /data/config/apps/*.[ew]ar /config/apps
+cp -v /data/shared/* /opt/ol/wlp/usr/shared/
+cp -rfv /data/configlibdir/* /config
+cp -vr /data/config/* /config/
+cp -v /data/config/apps/*.[ew]ar /config/apps/
 
 date
 echo AJM Starting the server
