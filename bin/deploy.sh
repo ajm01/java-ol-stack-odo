@@ -16,7 +16,7 @@ if [ ! $? -eq 0 ]; then
     exit 1
 fi
 
-cp -v /data/shared/* /opt/ol/wlp/usr/shared/
+cp -rv /data/shared/* /opt/ol/wlp/usr/shared/
 cp -rfv /data/configlibdir/* /config
 cp -vr /data/config/* /config/
 cp -v /data/config/apps/*.[ew]ar /config/apps/

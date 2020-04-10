@@ -78,7 +78,7 @@ cd $CONFIGDIR
 if [ -d ./defaultServer/lib ]; then mv ./defaultServer/lib /data/configlibdir; fi
 if [ ! -d /configlibdir/lib ]; then mkdir /data/configlibdir/lib; fi
 mv -f ./* /data/config/
-if [ -d ../shared ]; then mv ../shared/* /data/shared/; fi
+if [ -d ../../shared ]; then mv ../../shared/* /data/shared/; fi
 cd -
 cp ./target/*.[ew]ar /data/config/apps
 
